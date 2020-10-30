@@ -55,6 +55,18 @@ function resetBox () {
     pause(200)
     box.setVelocity(25, 0)
 }
+sprites.onOverlap(SpriteKind.package, SpriteKind.errorBin, function (sprite, otherSprite) {
+    resetBox()
+})
+sprites.onOverlap(SpriteKind.package, SpriteKind.upBin, function (sprite, otherSprite) {
+    resetBox()
+})
+sprites.onOverlap(SpriteKind.package, SpriteKind.downBin, function (sprite, otherSprite) {
+    resetBox()
+})
+sprites.onOverlap(SpriteKind.package, SpriteKind.cheerioBin, function (sprite, otherSprite) {
+    resetBox()
+})
 // Create and place game map and objects
 let orientation = 0
 let objectWeight = 0
@@ -122,7 +134,6 @@ monkey = sprites.create(img`
     ..........fffffffffffff.........
     `, SpriteKind.Player)
 monkey.setFlag(SpriteFlag.ShowPhysics, true)
-scene.cameraFollowSprite(monkey)
 controller.moveSprite(monkey, 100, 100)
 tiles.placeOnTile(monkey, tiles.getTileLocation(5, 7))
 box = sprites.create(img`
@@ -143,6 +154,7 @@ box = sprites.create(img`
     f e e e e e e e e e e e e e e f 
     f f f f f f f f f f f f f f f f 
     `, SpriteKind.package)
+scene.cameraFollowSprite(box)
 blueButton = sprites.create(img`
     . . . . . . . . . . . . . . . b 
     . . . . . . . . . . . . . . . . 
@@ -259,5 +271,29 @@ let sideOrientation = sprites.create(img`
 tiles.placeOnTile(sideOrientation, tiles.getTileLocation(10, 9))
 resetBox()
 forever(function () {
-	
+    if (box.overlapsWith(pinkButton)) {
+        box.setVelocity(0, 0)
+        game.showLongText("Length: " + convertToText(boxLength) + "\\n \\n \\n Width: " + convertToText(boxWidth) + "\\n \\n \\n Height: " + convertToText(boxHeight) + "\\n \\n \\n Weight: " + convertToText(objectWeight), DialogLayout.Center)
+        game.showLongText("Material: " + objectMaterial, DialogLayout.Center)
+        pinkButton.setFlag(SpriteFlag.Ghost, true)
+        box.setVelocity(25, 0)
+    }
+    if (_type == 2 && box.x == 75) {
+        box.setVelocity(0, 25)
+    }
+    if (_type == 0 && box.x == 75) {
+        box.setVelocity(0, 25)
+    }
+    if (box.overlapsWith(blueButton)) {
+        box.setVelocity(0, 0)
+        game.showLongText("Orientation: " + convertToText(orientation), DialogLayout.Center)
+        blueButton.setFlag(SpriteFlag.Ghost, true)
+        box.setVelocity(25, 0)
+    }
+    if (box.overlapsWith(pinkButton)) {
+        box.setVelocity(0, 0)
+        game.splash("Camera 1")
+        pinkButton.setFlag(SpriteFlag.Ghost, true)
+        box.setVelocity(25, 0)
+    }
 })
