@@ -7,6 +7,7 @@ namespace SpriteKind {
     export const downBin = SpriteKind.create()
     export const sideBin = SpriteKind.create()
     export const unknownBin = SpriteKind.create()
+    export const junction = SpriteKind.create()
 }
 // Pause the game, click reset to restart the game and bring back the box
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -54,17 +55,39 @@ function resetBox () {
     box.setFlag(SpriteFlag.Invisible, false)
     pause(200)
     box.setVelocity(25, 0)
+    junction1.setFlag(SpriteFlag.Ghost, true)
+    junction2.setFlag(SpriteFlag.Ghost, true)
+    junction3.setFlag(SpriteFlag.Ghost, true)
 }
-sprites.onOverlap(SpriteKind.package, SpriteKind.errorBin, function (sprite, otherSprite) {
-    resetBox()
+sprites.onOverlap(SpriteKind.package, SpriteKind.junction, function (sprite, otherSprite) {
+    box.setVelocity(0, 25)
 })
 sprites.onOverlap(SpriteKind.package, SpriteKind.upBin, function (sprite, otherSprite) {
+    box.setVelocity(0, 0)
+    box.say("Up Goat Figurine", 1000)
+    pause(1000)
+    box.say("")
     resetBox()
 })
-sprites.onOverlap(SpriteKind.package, SpriteKind.downBin, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.package, SpriteKind.unknownBin, function (sprite, otherSprite) {
+    box.setVelocity(0, 0)
+    box.say("Unknown", 1000)
+    pause(1000)
+    box.say("")
+    resetBox()
+})
+sprites.onOverlap(SpriteKind.package, SpriteKind.sideBin, function (sprite, otherSprite) {
+    box.setVelocity(0, 0)
+    box.say("Side Goat Figurine", 1000)
+    pause(1000)
+    box.say("")
     resetBox()
 })
 sprites.onOverlap(SpriteKind.package, SpriteKind.cheerioBin, function (sprite, otherSprite) {
+    box.setVelocity(0, 0)
+    box.say("Giant Cheerio", 1000)
+    pause(1000)
+    box.say("")
     resetBox()
 })
 // Create and place game map and objects
@@ -75,6 +98,9 @@ let boxHeight = 0
 let boxWidth = 0
 let boxLength = 0
 let _type = 0
+let junction3: Sprite = null
+let junction2: Sprite = null
+let junction1: Sprite = null
 let pinkButton: Sprite = null
 let blueButton: Sprite = null
 let box: Sprite = null
@@ -269,31 +295,93 @@ let sideOrientation = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.sideBin)
 tiles.placeOnTile(sideOrientation, tiles.getTileLocation(10, 9))
+junction1 = sprites.create(img`
+    . . . . . . . . . . . . . . . b 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.junction)
+tiles.placeOnTile(junction1, tiles.getTileLocation(4, 7))
+junction2 = sprites.create(img`
+    . . . . . . . . . . . . . . . b 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.junction)
+tiles.placeOnTile(junction2, tiles.getTileLocation(6, 7))
+junction3 = sprites.create(img`
+    . . . . . . . . . . . . . . . b 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.junction)
+tiles.placeOnTile(junction3, tiles.getTileLocation(10, 7))
 resetBox()
 forever(function () {
     if (box.overlapsWith(pinkButton)) {
         box.setVelocity(0, 0)
+        box.say("Scanning...")
+        pause(500)
         game.showLongText("Length: " + convertToText(boxLength) + "\\n \\n \\n Width: " + convertToText(boxWidth) + "\\n \\n \\n Height: " + convertToText(boxHeight) + "\\n \\n \\n Weight: " + convertToText(objectWeight), DialogLayout.Center)
         game.showLongText("Material: " + objectMaterial, DialogLayout.Center)
+        if (objectMaterial == "Unknown") {
+            junction1.setFlag(SpriteFlag.Ghost, false)
+        }
+        if (objectMaterial == "Rubber") {
+            junction2.setFlag(SpriteFlag.Ghost, false)
+        }
         pinkButton.setFlag(SpriteFlag.Ghost, true)
         box.setVelocity(25, 0)
-    }
-    if (_type == 2 && box.x == 75) {
-        box.setVelocity(0, 25)
-    }
-    if (_type == 0 && box.x == 75) {
-        box.setVelocity(0, 25)
+        box.say("")
     }
     if (box.overlapsWith(blueButton)) {
         box.setVelocity(0, 0)
-        game.showLongText("Orientation: " + convertToText(orientation), DialogLayout.Center)
+        box.say("Scanning...")
+        pause(500)
+        if (orientation == 0) {
+            game.showLongText("Orientation: " + "Up", DialogLayout.Center)
+        } else {
+            game.showLongText("Orientation: " + "Side", DialogLayout.Center)
+            junction3.setFlag(SpriteFlag.Ghost, false)
+        }
         blueButton.setFlag(SpriteFlag.Ghost, true)
         box.setVelocity(25, 0)
-    }
-    if (box.overlapsWith(pinkButton)) {
-        box.setVelocity(0, 0)
-        game.splash("Camera 1")
-        pinkButton.setFlag(SpriteFlag.Ghost, true)
-        box.setVelocity(25, 0)
+        box.say("")
     }
 })
